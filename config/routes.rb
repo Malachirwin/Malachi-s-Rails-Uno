@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
+  get 'sessions/new'
+
   resources :users
-  get 'user/new'
-  get 'user/index'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  root 'application#hello'
+  root 'sessions#home'
+  get    '/login',   to: 'sessions#new'
+  post   '/login',   to: 'sessions#create'
+  delete '/logout',  to: 'sessions#destroy'
 end
