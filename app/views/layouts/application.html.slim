@@ -15,9 +15,9 @@ html
               = link_to "Home", root_path
             - if logged_in?
               li
-                = link_to "Users", '#'
+                = link_to "Users", sessions_users_url
               li.dropdown
-              li = link_to "Profile", current_user
+              li = link_to "Profile", sessions_profile_url
               li = link_to "Settings", '#'
               li.divider
               li
