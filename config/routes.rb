@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get 'game/new'
+
+  get 'game/game_home'
+
+  get 'game/game_over'
+
   get 'sessions/new'
 
   # resources :users

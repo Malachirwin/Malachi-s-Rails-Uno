@@ -10,7 +10,45 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190208212707) do
+ActiveRecord::Schema.define(version: 20190210201613) do
+
+  create_table "cards", force: :cascade do |t|
+    t.string "color"
+    t.string "rank"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "deck_id"
+    t.bigint "game_id"
+    t.bigint "player_id"
+    t.bigint "played_cards_id"
+    t.integer "order"
+  end
+
+  create_table "decks", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "game_id"
+  end
+
+  create_table "games", force: :cascade do |t|
+    t.integer "player_turn", default: 0
+    t.string "direction", default: "Clockwise"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "played_cards", force: :cascade do |t|
+    t.bigint "game_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "players", force: :cascade do |t|
+    t.string "name"
+    t.bigint "game_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "name"
