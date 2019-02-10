@@ -1,0 +1,2 @@
+class PlayedCard < ApplicationRecord
+end
