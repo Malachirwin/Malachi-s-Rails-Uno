@@ -22,6 +22,7 @@ html
               li.divider
               li
                 = link_to "Log out", logout_path, method: :delete
+              li = link_to "New Game", game_new_url  
             - else
               li
                 = link_to "Log in", login_path

@@ -1,2 +1,4 @@
-h1 Game#new
-p Find me in app/views/game/new.html.slim
+h1 Uno
+= react_component('Game', {gameHolder: @gameholder.to_json}, {prerender: true})
+/ = @game.player.to_json
+= @gameholder.to_json

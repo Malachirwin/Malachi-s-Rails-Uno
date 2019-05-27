@@ -1,52 +1,58 @@
-class Game < ApplicationRecord
-  has_many :decks
-  has_many :players
-  has_many :played_cards
+require_relative 'player'
+require_relative 'card_deck'
+require 'pry'
 
-  def make_game
-    deck = Deck.create(game_id: id)
-    deck.make_deck
+class Game
+  def initialize
+    @players = []
     4.times do |index|
-      Player.create(name: "player #{index + 1}", game_id: id)
+      @players << Player.new("player #{index + 1}")
     end
-  end
-
-  def all_players
-    players.all
-  end
-
-  def played_card_id
-    PlayedCard.where(game_id: 1).id
-  end
-
-  def played_cards
-    array = []
-    all_cards_in_game.each do |card|
-      if card.played_cards_id == id
-        array.push card
+    @player_turn = 0
+    @direction = 'Clockwise'
+    @deck = CardDeck.new
+    @deck.shuffle
+    @deck.deal(@deck, *@players)
+    @played_cards = []
+    card = Card.new("Hello", "I'm not a card")
+    until card.rank.class == Integer
+      card = deck.remove_top_card
+      pervious_cards = @played_cards
+      @played_cards = [card]
+      deck.add_cards_and_shuffle(pervious_cards)
+    end
+    players.each do |this_player|
+      if this_player.cards_left < 5
+        until this_player.cards_left == 5
+          this_player.take_cards(draw_cards(1))
+        end
       end
     end
-    array
+
   end
 
-  def played_card_id
-    played_cards.first.id
+  def to_json(options = {})
+    {players: players, player_turn: player_turn, player: player, direction: direction, deck: deck, played_cards: played_cards}.to_json
   end
 
-  def all_cards_in_game
-    decks[0].cards.all
+  def player_turn
+    @player_turn
+  end
+
+  def players
+    @players
   end
 
   def deck
-    decks[0].cards_in_deck
+    @deck
+  end
+
+  def played_cards
+    @played_cards
   end
 
   def set_played_card(card)
-    played_card.all.each do |played_card|
-      played_card.reset_ids
-    end
-    card.reset_ids
-    card.played_cards_id = played_card_id
+    @played_cards = [card]
   end
 
   def game_over?
@@ -104,8 +110,7 @@ class Game < ApplicationRecord
         the_card.change_color(color)
       end
       card_to_delete = the_card
-      the_card.reset_ids
-      the_card.played_cards_id = played_card_id
+      played_cards << the_card
     else
       return "You can't play that"
     end
@@ -120,8 +125,7 @@ class Game < ApplicationRecord
       end
     end
     the_card.change_color(color)
-    the_card.reset_ids
-    the_card.played_cards_id = played_card_id
+    played_cards << the_card
     players[next_player_number].take_cards(draw_cards(4))
     next_players_turn
     card_to_delete = the_card
@@ -129,7 +133,7 @@ class Game < ApplicationRecord
 
   def draw_cards(number_of_cards)
     if deck.cards_left <= number_of_cards
-      cards = played_cards.shift(played_cards.length - 1)
+      cards = @played_cards.shift(played_cards.length - 1)
       deck.add_cards_and_shuffle(cards)
     end
     cards = []
@@ -149,8 +153,7 @@ class Game < ApplicationRecord
       end
       card_to_delete = the_card
       players[next_player_number].take_cards(draw_cards(2))
-      the_card.reset_ids
-      the_card.played_cards_id = played_card_id
+      played_cards << the_card
     else
       return "You can't play that"
     end
@@ -268,11 +271,15 @@ class Game < ApplicationRecord
   def reverse(card)
     if card.rank == "Reverse"
       if direction == "Clockwise"
-        direction = "Counter-Clockwise"
+        @direction = "Counter-Clockwise"
       else
-        direction = "Clockwise"
+        @direction = "Clockwise"
       end
     end
+  end
+
+  def direction
+    @direction
   end
 
   def next_player_number
@@ -295,15 +302,15 @@ class Game < ApplicationRecord
   def next_players_turn
     if direction == "Clockwise"
       if player_turn == 3
-        player_turn = 0
+        @player_turn = 0
       else
-        player_turn += 1
+        @player_turn += 1
       end
     else
       if player_turn == 0
-        player_turn = 3
+        @player_turn = 3
       else
-        player_turn -= 1
+        @player_turn -= 1
       end
     end
   end
