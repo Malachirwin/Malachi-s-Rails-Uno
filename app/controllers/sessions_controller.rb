@@ -13,6 +13,11 @@ class SessionsController < BaseController
     end
   end
 
+  def user
+    @user = User.find(1)
+    render json: @user
+  end
+
   def create
     @user = User.find_by(email: params[:session][:email].downcase)
     if @user && @user.authenticate(params[:session][:password])

@@ -1,3 +1,57 @@
 // Place all the styles related to the Game controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.holder {
+  position: absolute;
+  left: 38%;
+}
+table.game {
+  width: 40rem;
+  height: 40rem;
+  overflow: hidden;
+  border-collapse: collapse;
+}
+.game-column p {
+  text-align: center;
+  font-size: 14rem;
+  line-height: 34px;
+  height: 35px;
+}
+.less-margin-bottom p {
+}
+.blank {
+  padding: 19.5px
+}
+td.game-column {
+  width: 33.333%;
+  border: 6px solid #222;
+}
+
+td.game-column::after {
+  content: "";
+  display: block;
+  // margin-top: 100%;
+  // margin-bottom: -60px;
+}
+
+td.game-column {
+  border: 6px solid #222;
+}
+
+td.game-column:first-of-type {
+  border-left-color: transparent;
+  border-top-color: transparent;
+}
+
+td.game-column:nth-of-type(2) {
+  border-top-color: transparent;
+}
+
+td.game-column:nth-of-type(3) {
+  border-right-color: transparent;
+  border-top-color: transparent;
+}
+
+tr.game-row:nth-of-type(3) td.game-column {
+  border-bottom-color: transparent;
+}
